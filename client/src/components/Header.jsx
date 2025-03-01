@@ -3,12 +3,12 @@ import {Link} from 'react-router-dom'
 
 export default function Header() {
   return (
-    <header className='bg-orange-600 shadow-md'>
+    <header className='bg-sky-900 shadow-md'>
       <div className='flex justify-between items-center max-w-6xl mx-auto p-3'>
         <Link to= '/'>
       <h1 className='font-bold text-sm sm:text-xl flex flex-wrap'>
         <span className='text-zinc-50'>Royal</span>
-        <span className='text-slate-950'>Estate</span>
+        <span className='text-orange-600'>Estate</span>
       </h1>
         </Link>
       <form className='bg-slate-100 rounded-lg flex items-center p-2.5'> 
@@ -17,13 +17,13 @@ export default function Header() {
       </form>
           <ul className='gap-4  flex'>
             <Link to='/'> 
-            <li className='hidden sm:inline text-slate-950 font-semibold hover:underline'>Home</li>
+            <li className='hidden sm:inline text-slate-100 font-semibold hover:underline'>Home</li>
             </Link>
             <Link to='/about'>
-            <li className='hidden sm:inline text-slate-950 font-semibold hover:underline'>About</li>
+            <li className='hidden sm:inline text-slate-100 font-semibold hover:underline'>About</li>
             </Link>
-            <Link to='/SignIn'>
-            <li className='text-slate-950 font-semibold hover:underline'>Signin</li>
+            <Link to='/Sign_in'>
+            <li className='text-slate-100 font-semibold hover:underline'>Signin</li>
             </Link>
           </ul>
 
