@@ -1,33 +1,48 @@
 import express from 'express';
-import mongoose  from 'mongoose';
+import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import authRouter from './routes/auth.route.js';
 
 dotenv.config();
 
-mongoose.connect(process.env.MONGO).
-then(()=>{
-        console.log("Conneced to Mongo DB.");
-    }).catch((err)=>{
-        console.log("Error");
+// Ensure MONGO environment variable exists
+if (!process.env.MONGO) {
+    console.error("❌ Missing MONGO connection string in .env file.");
+    process.exit(1);
+}
+
+// MongoDB Connection
+mongoose.connect(process.env.MONGO)
+    .then(() => {
+        console.log("✅ Connected to MongoDB.");
     })
-
-const app = express();
-app.use(express.json());
-
-app.listen(3000,()=>{
-    console.log("Server is running on port 3000 ");
-});
-
-app.use('/api/auth',authRouter)
-
-app.use((err,req,res,next) => {
-    const statuscode = err.statuscode || 500;
-    const message = err.message || 'internal server error';
-    return res.status(statuscode).json({
-        success:false,
-        statuscode,
-        message
+    .catch((err) => {
+        console.error("❌ MongoDB Connection Error:", err.message);
+        process.exit(1);
     });
 
+const app = express();
+app.use(express.json()); // Parse JSON requests
+
+// Define Routes
+app.use('/api/auth', authRouter);
+
+const PORT = process.env.PORT || 3000;
+const HOST = '0.0.0.0'; // Allows access from VPN/local network
+
+app.listen(PORT, HOST, () => {
+    console.log(`🚀 Server is running on http://${HOST}: port ${PORT}`);
+});
+
+// Global Error Handler Middleware
+app.use((err, req, res, next) => {
+    const statusCode = err.statusCode || 500;
+    const message = err.message || 'Internal Server Error';
+    console.error(`❌ Error: ${message}`);
+    
+    return res.status(statusCode).json({
+        success: false,
+        statusCode,
+        message,
+    });
 });
