@@ -15,7 +15,13 @@ const userSchema = new mongoose.Schema({
         type: String,
         required:true,
     },  
-},{timestamps:true});
+    avatar:
+    {
+        type: String,
+        default: "https://www.pngarts.com/files/10/Default-Profile-Picture-Download-PNG-Image.png"
+    },
+},
+    {timestamps:true});
 
 const User = mongoose.model('User',userSchema);
 
