@@ -1,6 +1,6 @@
 import User from "../models/user.model.js";
 import bcryptjs, { compareSync } from "bcryptjs";
-import { errorHandler } from "../utils.js/error.js";
+import { errorHandler } from "../utils/error.js";
 import jwt from "jsonwebtoken";
 
 
