@@ -1,6 +1,7 @@
 import { useSelector, useDispatch } from "react-redux"
 import { useEffect, useRef, useState } from "react";
 import { uploadImage } from "../cloudinary";
+import { Link } from "react-router-dom";
 import { updateUserStart, 
          updateUserSuccess, 
          updateUserFailure , 
@@ -148,8 +149,7 @@ export default function Profile() {
             <span className="text-slate-700">{`Uploading: ${filePerc}%`}</span>
           ) : uploadComplete ? (
             <span className="text-green-700">Image uploaded successfully!</span>
-          ) : (
-            ""
+          ) : (""
           )}
         </p>
         
@@ -186,6 +186,11 @@ export default function Profile() {
         > 
           {loading ? "Loading..." : "Update"}
         </button>
+        <Link
+          className="bg-blue-700 hover:opacity-95 p-3 rounded-lg text-white font-bold uppercase mt-3 text-center" 
+          to={"/create-listing"}>
+            Create Listing
+        </Link>
       </form>
       <div className="flex justify-between mt-5">
         <span onClick={handleDeleteUser} className="text-red-700 cursor-pointer">Delete Account</span>
