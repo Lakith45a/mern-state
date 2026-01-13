@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import userRouter from './routes/user.route.js';
 import cookieParser from 'cookie-parser';
 import authRouter from './routes/auth.route.js';
+import listingRouter from './routes/listing.route.js';
 
 dotenv.config();
 
@@ -32,15 +33,9 @@ app.use(cookieParser()); // Move cookie parser BEFORE routes
 // Define Routes
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
+app.use('/api/listing',listingRouter);
 
-const PORT = process.env.PORT || 3000;
-const HOST = '0.0.0.0'; // Allows access from VPN/local network
-
-app.listen(PORT, HOST, () => {
-    console.log(`🚀 Server is running on http://${HOST}:${PORT}`);
-});
-
-// Global Error Handler Middleware
+// Global Error Handler Middleware (must be AFTER routes)
 app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;
     const message = err.message || 'Internal Server Error';
@@ -51,4 +46,11 @@ app.use((err, req, res, next) => {
         statusCode,
         message,
     });
+});
+
+const PORT = process.env.PORT || 3000;
+const HOST = '0.0.0.0'; // Allows access from VPN/local network
+
+app.listen(PORT, HOST, () => {
+    console.log(`🚀 Server is running on http://${HOST}:${PORT}`);
 });
