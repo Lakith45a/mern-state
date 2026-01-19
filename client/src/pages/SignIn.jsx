@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { signInStart, signInSuccess, signInFailure } from "../redux/user/userSlice";
+import {
+  signInStart,
+  signInSuccess,
+  signInFailure,
+} from "../redux/user/userSlice";
 import GOAuth from "../components/GOAuth";
 
 export default function SignIn() {
@@ -45,7 +49,7 @@ export default function SignIn() {
       <div className="w-full max-w-2xl bg-white bg-opacity-60 rounded-lg shadow-2xl p-8">
         <h1 className="text-3xl font-bold mb-6 text-center">Sign In</h1>
         <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
-          <input 
+          <input
             type="email"
             placeholder="Email"
             className="p-3 rounded-lg border"
