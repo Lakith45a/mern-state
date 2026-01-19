@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 export default function Header() {
   const { currentUser } = useSelector((state) => state.user);
   return (
-    <header className="bg-sky-900 shadow-md">
+    <header className="bg-black shadow-md">
       <div className="flex justify-between items-center max-w-6xl mx-auto p-3">
         <Link to="/">
           <h1 className="font-bold text-sm sm:text-xl flex flex-wrap">
@@ -23,12 +23,12 @@ export default function Header() {
         </form>
         <ul className="gap-4  flex">
           <Link to="/">
-            <li className="hidden sm:inline text-slate-100 font-semibold hover:underline hover:text-red-600">
+            <li className="hidden sm:inline text-slate-100 font-semibold border-b-2 border-transparent hover:border-red-600">
               Home
             </li>
           </Link>
           <Link to="/about">
-            <li className="hidden sm:inline text-slate-100 font-semibold hover:underline hover:text-red-600">
+            <li className="hidden sm:inline text-slate-100 font-semibold border-b-2 border-transparent hover:border-red-600">
               About
             </li>
           </Link>

@@ -139,7 +139,7 @@ export default function Create_Listing() {
 
   return (
     <main className="p-3 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-semibold my-7 text-center">
+      <h1 className="text-3xl  font-semibold my-7 text-center pb-5">
         Create a Listing
       </h1>
       <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4">
