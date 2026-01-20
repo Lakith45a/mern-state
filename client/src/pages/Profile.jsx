@@ -275,11 +275,11 @@ export default function Profile() {
               <button onClick={() => handleDeleteListing(listing._id)} className="text-red-700 hover:opacity-75">
                 <FaTrash />
               </button>
-              
+              <Link to={`/update-listing/${listing._id}`}>
               <button className="text-green-700 hover:opacity-75">
                   <FaEdit />
               </button>
-              
+              </Link>
             </div>
           </div>
         ))}
