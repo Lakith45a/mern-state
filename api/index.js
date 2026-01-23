@@ -39,11 +39,13 @@ app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/listing", listingRouter);
 
-app.use(express.static(path.join(_dirname, "client/dist", )));
-app.get("*", (req, res) => {
-  res.sendFile(path.join(_dirname, "client", "dist", "index.html"));
-});
-
+// Only serve static files in production (not on Vercel serverless)
+if (process.env.NODE_ENV !== "production" || !process.env.VERCEL) {
+  app.use(express.static(path.join(_dirname, "client/dist")));
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(_dirname, "client", "dist", "index.html"));
+  });
+}
 
 // Global Error Handler Middleware (must be AFTER routes)
 app.use((err, req, res, next) => {
@@ -58,9 +60,15 @@ app.use((err, req, res, next) => {
   });
 });
 
-const PORT = process.env.PORT || 3000;
-const HOST = "0.0.0.0"; // Allows access from VPN/local network
+// Export for Vercel serverless
+export default app;
 
-app.listen(PORT, HOST, () => {
-  console.log(`🚀 Server is running on http://${HOST}:${PORT}`);
-});
+// Only start server locally (not on Vercel)
+if (process.env.NODE_ENV !== "production" || !process.env.VERCEL) {
+  const PORT = process.env.PORT || 3000;
+  const HOST = "0.0.0.0"; // Allows access from VPN/local network
+
+  app.listen(PORT, HOST, () => {
+    console.log(`🚀 Server is running on http://${HOST}:${PORT}`);
+  });
+}
