@@ -5,6 +5,7 @@ import userRouter from "./routes/user.route.js";
 import cookieParser from "cookie-parser";
 import authRouter from "./routes/auth.route.js";
 import listingRouter from "./routes/listing.route.js";
+import path from "path";
 
 dotenv.config();
 
@@ -25,6 +26,8 @@ mongoose
     process.exit(1);
   });
 
+const _dirname = path.resolve();
+
 const app = express();
 
 // Middleware - ORDER MATTERS!
@@ -35,6 +38,12 @@ app.use(cookieParser()); // Move cookie parser BEFORE routes
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/listing", listingRouter);
+
+app.use(express.static(path.join(_dirname, "client/dist", )));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(_dirname, "client", "dist", "index.html"));
+});
+
 
 // Global Error Handler Middleware (must be AFTER routes)
 app.use((err, req, res, next) => {

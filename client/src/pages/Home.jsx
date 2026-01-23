@@ -69,7 +69,7 @@ export default function Home() {
           </h1>
 
           <p className="text-gray-500 text-base md:text-lg max-w-xl leading-relaxed">
-            Royal Estate makes finding your next home easier.
+            Royal Estate makes finding your next home easier,
             <br />
             Browse carefully selected properties in one place.
           </p>
