@@ -2,7 +2,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 import { uploadImage } from "../cloudinary";
 import { Link } from "react-router-dom";
-import { FaTrash, FaEdit } from "react-icons/fa";
+import { FaTrash, FaEdit, FaUser, FaEnvelope, FaLock, FaPlus, FaSignOutAlt, FaCamera, FaHome } from "react-icons/fa";
 import {
   updateUserStart,
   updateUserSuccess,
@@ -14,7 +14,6 @@ import {
   signOutUserSuccess,
   signOutUserFailure,
 } from "../redux/user/userSlice";
-import { set } from "mongoose";
 
 export default function Profile() {
   const fileRef = useRef(null);
@@ -164,127 +163,231 @@ export default function Profile() {
   }
 
   return (
-    <div className="p-3 mx-auto max-w-lg">
-      <h1 className="text-3xl font-semibold py-7 text-center">Profile</h1>
-      <form onSubmit={handleSubmit} className="flex flex-col p-4">
-        <input
-          onChange={(e) => setFile(e.target.files[0])}
-          type="file"
-          id="file"
-          ref={fileRef}
-          hidden
-          accept="image/*"
-        />
-        <img
-          onClick={() => fileRef.current.click()}
-          src={formData?.avatar || currentUser.avatar}
-          alt="profile"
-          className="rounded-full h-24 w-24 object-cover cursor-pointer self-center mt-2"
-        />
-
-        {/* Upload status indicator */}
-        <p className="text-sm self-center">
-          {fileUploadError ? (
-            <span className="text-red-700">
-              Error uploading image (file must be less than 3 MB)
-            </span>
-          ) : uploading ? (
-            <span className="text-slate-700">{`Uploading: ${filePerc}%`}</span>
-          ) : uploadComplete ? (
-            <span className="text-green-700">Image uploaded successfully!</span>
-          ) : (
-            ""
-          )}
-        </p>
-
-        <input
-          type="text"
-          id="username"
-          placeholder="Username"
-          defaultValue={currentUser.username}
-          className="border p-3 rounded-lg mt-3"
-          onChange={handleChange}
-        />
-
-        <input
-          type="email"
-          id="email"
-          placeholder="Email"
-          defaultValue={currentUser.email}
-          className="border p-3 rounded-lg mt-3"
-          onChange={handleChange}
-        />
-
-        <input
-          type="password"
-          id="password"
-          placeholder="Password"
-          className="border p-3 rounded-lg mt-3"
-          onChange={handleChange}
-        />
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="bg-fuchsia-950 hover:opacity-95 p-3 rounded-lg text-white font-bold uppercase mt-3"
-        >
-          {loading ? "Loading..." : "Update"}
-        </button>
-        <Link
-          className="bg-blue-700 hover:opacity-95 p-3 rounded-lg text-white font-bold uppercase mt-3 text-center"
-          to={"/create-listing"}
-        >
-          Create Listing
-        </Link>
-      </form>
-      <div className="flex justify-between mt-5">
-        <span
-          onClick={handleDeleteUser}
-          className="text-red-700 cursor-pointer"
-        >
-          Delete Account
-        </span>
-        <span onClick={handleSignOut} className="text-red-700 cursor-pointer">
-          Sign Out
-        </span>
-      </div>
-      <p className="text-red-700 text-center mt-5">{error ? error : ""}</p>
-      <p className="text-green-700 text-center mt-5">
-        {updateSuccess ? "Profile updated successfully!" : ""}
-      </p>
-      <button onClick={handleShowListings} className="text-green-700 font-bold mt-5 w-full">Show Listings </button>
-      <p className="text-red-700 text-center mt-5">
-        {showListingError ? "Error fetching listings. " : ""}
-      </p>
-      {userListings && userListings.length > 0 && 
-      <div className="flex flex-col gap-4 ">
-        <h1 className="text-2xl font-semibold pt-7 text-center">Your Listings</h1>
-        {userListings.map((listing) => (
-          <div key={listing._id} className="flex items-center gap-4 border p-3 rounded-lg  justify-between">
-            <Link to={`/listing/${listing._id}`}>
-              <img
-                src={listing.imageUrls[0]}
-                alt="listing"
-                className="h-20 w-20 object-contain rounded-lg"
+    <div className="min-h-screen bg-gray-50 py-8 px-4">
+      <div className="max-w-4xl mx-auto">
+        {/* Profile Header Card */}
+        <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-3xl p-8 mb-8 shadow-xl">
+          <div className="flex flex-col md:flex-row items-center gap-6">
+            {/* Avatar Section */}
+            <div className="relative group">
+              <input
+                onChange={(e) => setFile(e.target.files[0])}
+                type="file"
+                id="file"
+                ref={fileRef}
+                hidden
+                accept="image/*"
               />
-            </Link>
-            <Link className="text-slate-700 font-semibold flex-1 hover:underline truncate" to={`/listing/${listing._id}`}>
-              <p >{listing.name}</p>
-            </Link>
-            <div className="flex flex-col items-center gap-2">
-              <button onClick={() => handleDeleteListing(listing._id)} className="text-red-700 hover:opacity-75">
-                <FaTrash />
-              </button>
-              <Link to={`/update-listing/${listing._id}`}>
-              <button className="text-green-700 hover:opacity-75">
-                  <FaEdit />
-              </button>
-              </Link>
+              <div className="relative">
+                <img
+                  onClick={() => fileRef.current.click()}
+                  src={formData?.avatar || currentUser.avatar}
+                  alt="profile"
+                  className="rounded-full h-32 w-32 object-cover cursor-pointer border-4 border-orange-500 shadow-lg transition-transform hover:scale-105"
+                />
+                <div 
+                  onClick={() => fileRef.current.click()}
+                  className="absolute bottom-2 right-2 bg-orange-500 p-2 rounded-full cursor-pointer hover:bg-orange-600 transition-colors shadow-lg"
+                >
+                  <FaCamera className="text-white text-sm" />
+                </div>
+              </div>
+              {/* Upload status */}
+              {(uploading || uploadComplete || fileUploadError) && (
+                <p className="text-sm text-center mt-3">
+                  {fileUploadError ? (
+                    <span className="text-red-400">Error uploading image</span>
+                  ) : uploading ? (
+                    <span className="text-gray-300">{`Uploading: ${filePerc}%`}</span>
+                  ) : uploadComplete ? (
+                    <span className="text-green-400">Upload successful!</span>
+                  ) : null}
+                </p>
+              )}
+            </div>
+
+            {/* User Info */}
+            <div className="text-center md:text-left flex-1">
+              <h1 className="text-3xl font-bold text-white mb-1">{currentUser.username}</h1>
+              <p className="text-gray-400 mb-4">{currentUser.email}</p>
+              <div className="flex flex-wrap gap-3 justify-center md:justify-start">
+                <Link
+                  to="/create-listing"
+                  className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold px-5 py-2.5 rounded-full transition-colors text-sm"
+                >
+                  <FaPlus /> Create Listing
+                </Link>
+                <button
+                  onClick={handleSignOut}
+                  className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white font-semibold px-5 py-2.5 rounded-full transition-colors text-sm border border-white/20"
+                >
+                  <FaSignOutAlt /> Sign Out
+                </button>
+              </div>
             </div>
           </div>
-        ))}
+        </div>
+
+        {/* Main Content Grid */}
+        <div className="grid md:grid-cols-2 gap-8">
+          {/* Update Profile Form */}
+          <div className="bg-white rounded-2xl p-6 shadow-md border border-gray-100">
+            <h2 className="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
+              <FaUser className="text-orange-500" /> Update Profile
+            </h2>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="relative">
+                <FaUser className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                <input
+                  type="text"
+                  id="username"
+                  placeholder="Username"
+                  defaultValue={currentUser.username}
+                  className="w-full pl-12 pr-4 py-3.5 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 outline-none transition-all"
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="relative">
+                <FaEnvelope className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                <input
+                  type="email"
+                  id="email"
+                  placeholder="Email"
+                  defaultValue={currentUser.email}
+                  className="w-full pl-12 pr-4 py-3.5 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 outline-none transition-all"
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="relative">
+                <FaLock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                <input
+                  type="password"
+                  id="password"
+                  placeholder="New Password"
+                  className="w-full pl-12 pr-4 py-3.5 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 outline-none transition-all"
+                  onChange={handleChange}
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-gradient-to-r from-slate-800 to-slate-900 text-white font-semibold py-3.5 rounded-xl hover:from-slate-900 hover:to-slate-800 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-70"
+              >
+                {loading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                    Updating...
+                  </span>
+                ) : "Update Profile"}
+              </button>
+
+              {/* Success/Error Messages */}
+              {error && (
+                <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-red-600 text-center text-sm">
+                  {error}
+                </div>
+              )}
+              {updateSuccess && (
+                <div className="p-4 bg-green-50 border border-green-200 rounded-xl text-green-600 text-center text-sm">
+                  Profile updated successfully!
+                </div>
+              )}
+            </form>
+
+            {/* Danger Zone */}
+            <div className="mt-6 pt-6 border-t border-gray-100">
+              <p className="text-sm text-gray-500 mb-3">Danger Zone</p>
+              <button
+                onClick={handleDeleteUser}
+                className="text-red-500 hover:text-red-600 text-sm font-medium hover:underline"
+              >
+                Delete Account Permanently
+              </button>
+            </div>
+          </div>
+
+          {/* Listings Section */}
+          <div className="bg-white rounded-2xl p-6 shadow-md border border-gray-100">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
+                <FaHome className="text-orange-500" /> Your Listings
+              </h2>
+              <button
+                onClick={handleShowListings}
+                className="text-orange-500 hover:text-orange-600 text-sm font-semibold"
+              >
+                Refresh
+              </button>
+            </div>
+
+            {showListingError && (
+              <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-red-600 text-center text-sm mb-4">
+                Error fetching listings
+              </div>
+            )}
+
+            {userListings && userListings.length > 0 ? (
+              <div className="space-y-4 max-h-[500px] overflow-y-auto pr-2">
+                {userListings.map((listing) => (
+                  <div
+                    key={listing._id}
+                    className="flex items-center gap-4 p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors group"
+                  >
+                    <Link to={`/listing/${listing._id}`}>
+                      <img
+                        src={listing.imageUrls[0]}
+                        alt="listing"
+                        className="h-16 w-16 object-cover rounded-lg shadow-sm"
+                      />
+                    </Link>
+                    <Link
+                      className="flex-1 min-w-0"
+                      to={`/listing/${listing._id}`}
+                    >
+                      <p className="text-slate-800 font-semibold truncate hover:text-orange-500 transition-colors">
+                        {listing.name}
+                      </p>
+                      <p className="text-sm text-gray-500 truncate">
+                        {listing.address}
+                      </p>
+                    </Link>
+                    <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Link to={`/update-listing/${listing._id}`}>
+                        <button className="p-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors">
+                          <FaEdit className="text-sm" />
+                        </button>
+                      </Link>
+                      <button
+                        onClick={() => handleDeleteListing(listing._id)}
+                        className="p-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors"
+                      >
+                        <FaTrash className="text-sm" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <FaHome className="text-5xl text-gray-300 mx-auto mb-4" />
+                <p className="text-gray-500 mb-4">No listings yet</p>
+                <button
+                  onClick={handleShowListings}
+                  className="text-orange-500 hover:text-orange-600 font-semibold text-sm"
+                >
+                  Load Listings
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
-  } 
     </div>
   );
 }
