@@ -24,7 +24,12 @@ export const Signin = async (req, res, next) => {
     if (!validpassword) return next(errorHandler(401, "Wrong Credentials!"));
     const token = jwt.sign({ id: validUser._id }, process.env.JWT_KEY);
     res
-      .cookie("access_token", token, { httpOnly: true })
+      .cookie("access_token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        maxAge: 24 * 60 * 60 * 1000, // 1 day
+      })
       .status(200)
       .json(validUser);
   } catch (error) {
@@ -39,7 +44,12 @@ export const google = async (req, res, next) => {
       const token = jwt.sign({ id: user.id }, process.env.JWT_KEY);
       const { password: pass, ...rest } = user._doc;
       res
-        .cookie("access_token", token, { httpOnly: true })
+        .cookie("access_token", token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+          maxAge: 24 * 60 * 60 * 1000,
+        })
         .status(200)
         .json(rest);
     } else {
@@ -59,7 +69,12 @@ export const google = async (req, res, next) => {
       const token = jwt.sign({ id: newUser._id }, process.env.JWT_KEY);
       const { password: pass, ...rest } = newUser._doc;
       res
-        .cookie("access_token", token, { httpOnly: true })
+        .cookie("access_token", token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+          maxAge: 24 * 60 * 60 * 1000,
+        })
         .status(200)
         .json(rest);
     }
@@ -70,7 +85,11 @@ export const google = async (req, res, next) => {
 
 export const signOut = async (req, res, next) => {
   try {
-    res.clearCookie("access_token");
+    res.clearCookie("access_token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    });
     res.status(200).json("User has been logged out.");
   } catch (error) {
     next(error);
