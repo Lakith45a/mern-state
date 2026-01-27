@@ -308,7 +308,7 @@ export default function Listing() {
 
                   {!currentUser && (
                     <Link
-                      to="/sign-in"
+                      to="/sign_in"
                       className="block w-full text-center bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
                     >
                       Sign In to Contact
