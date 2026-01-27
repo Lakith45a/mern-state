@@ -337,27 +337,29 @@ export default function Profile() {
                 {userListings.map((listing) => (
                   <div
                     key={listing._id}
-                    className="flex items-center gap-4 p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors group"
+                    className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors group"
                   >
-                    <Link to={`/listing/${listing._id}`}>
-                      <img
-                        src={listing.imageUrls[0]}
-                        alt="listing"
-                        className="h-16 w-16 object-cover rounded-lg shadow-sm"
-                      />
-                    </Link>
-                    <Link
-                      className="flex-1 min-w-0"
-                      to={`/listing/${listing._id}`}
-                    >
-                      <p className="text-slate-800 font-semibold truncate hover:text-orange-500 transition-colors">
-                        {listing.name}
-                      </p>
-                      <p className="text-sm text-gray-500 truncate">
-                        {listing.address}
-                      </p>
-                    </Link>
-                    <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
+                      <Link to={`/listing/${listing._id}`} className="flex-shrink-0">
+                        <img
+                          src={listing.imageUrls[0]}
+                          alt="listing"
+                          className="h-14 w-14 sm:h-16 sm:w-16 object-cover rounded-lg shadow-sm"
+                        />
+                      </Link>
+                      <Link
+                        className="flex-1 min-w-0"
+                        to={`/listing/${listing._id}`}
+                      >
+                        <p className="text-slate-800 font-semibold truncate hover:text-orange-500 transition-colors text-sm sm:text-base">
+                          {listing.name}
+                        </p>
+                        <p className="text-xs sm:text-sm text-gray-500 truncate">
+                          {listing.address}
+                        </p>
+                      </Link>
+                    </div>
+                    <div className="flex items-center gap-2 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity ml-auto sm:ml-0">
                       <Link to={`/update-listing/${listing._id}`}>
                         <button className="p-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors">
                           <FaEdit className="text-sm" />
